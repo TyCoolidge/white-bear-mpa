@@ -127,11 +127,10 @@ button.btn-danger {
 }
 
 .background-image {
-   background: url("../img/background-landing.jpg");
-   background-size: 100% 100%;
-   background-position: center;
-   // background-attachment: fixed;
-   background-repeat: no-repeat;
+   background: url("../img/background-landing.jpg") no-repeat center center
+      fixed;
+   background-size: cover;
+   height: 100vh;
 }
 
 //card styles

@@ -1,5 +1,151 @@
 import React from "react";
+import successIcon from "../../icons/success.svg";
+import errorIcon from "../../icons/error.svg";
+import saveIcon from "../../icons/save.svg";
+import AppTemplate from "../ui/AppTemplate";
 
 export default function Edit() {
-  return <h1>Edit</h1>;
+   return (
+      <div>
+         {/* <!-- created success overlay --> */}
+         <div
+            className="bg-success w-100 py-4 d-none justify-content-center fixed-top"
+            id="overlay-success"
+         >
+            <img
+               src={successIcon}
+               width="28px"
+               style={{ marginTop: "-1px" }}
+               className="mr-2"
+               alt="success icon"
+            />
+            {/* <!-- find out what broke this --> */}
+            <p className="lead" style={{ color: "white" }}>
+               Card created!
+            </p>
+         </div>
+
+         {/* <!-- created danger overlay --> */}
+         <div
+            className="bg-danger w-100 py-4 d-none justify-content-center fixed-top"
+            id="overlay-danger"
+         >
+            <img
+               src={{ errorIcon }}
+               width="28px"
+               style={{ marginTop: "-1px" }}
+               className="mr-2"
+               alt="error icon"
+            />
+            {/* <!-- find out what broke this --> */}
+            <p className="lead" style={{ color: "white" }}>
+               Oops! Our bad. Please try again.
+            </p>
+         </div>
+
+         {/* <!-- comment just to split code for organization--> */}
+         <AppTemplate>
+            <h4 className="my-4 text-center text-muted">Edit card</h4>
+
+            {/* <!--TOP CARD FOR FUTURE PAGES--> */}
+            <div className="mb-2">
+               <div className="card bg-primary">
+                  <div className="card-body">
+                     {/* <!--add rows --> */}
+                     <textarea rows="7" autoFocus="autofocus"></textarea>
+                  </div>
+               </div>
+
+               <div className="card bg-secondary">
+                  <div className="card-body">
+                     Far far away, behind the word mountains, far from the
+                     countries Vokalia and Consonantia, there live the blind
+                     texts. Separated they live in Bookmarksgrove right at the
+                     coast of the Semantics, a large
+                  </div>
+               </div>
+            </div>
+            {/* <!-- character count--> */}
+            <p className="float-right mb-5 text-muted">0/240</p>
+            {/* <!-- create margin between card and buttons --> */}
+            <div className="clearfix"></div>
+            {/* <!-- make Button link to next page--> */}
+            <a
+               href="all-cards"
+               type="button"
+               className="btn btn-link"
+               style={{ float: "left" }}
+            >
+               Discard changes
+            </a>
+            <div className="float-right">
+               <button
+                  type="button"
+                  className="btn btn-primary btn-lg"
+                  id="save-imagery"
+               >
+                  <img
+                     src={saveIcon}
+                     width="22px"
+                     style={{ marginTop: "-1px" }}
+                     className="mr-2"
+                     alt="save icon"
+                  />
+                  Save
+               </button>
+            </div>
+            <div className="clearfix"></div>
+
+            <h4 className="mt-5 mb-3 text-center text-muted">
+               Card properties
+            </h4>
+            <div className="row mb-1">
+               <div className="col-4">
+                  <p className="mb-2 text-muted">Created on:</p>
+                  <p className="mb-2 text-muted">Last attempt:</p>
+                  <p className="mb-2 text-muted">Next attempt:</p>
+                  <p className="mb-2 text-muted">Consecutives:</p>
+               </div>
+
+               <div className="col-6 ml-5">
+                  <p className="mb-2">Dec. 21, 2019</p>
+                  <p className="mb-2">Dec. 31, 2019</p>
+                  <p className="mb-2">Jul. 14, 2020</p>
+                  <p className="mb-2">4</p>
+               </div>
+            </div>
+
+            {/* <!-- Need to fix margins as well as checkbox color --> */}
+            <div className="row">
+               <div className="col">
+                  <form>
+                     <div className="custom-control custom-checkbox">
+                        <input
+                           type="checkbox"
+                           className="custom-control-input"
+                           id="customCheck"
+                           name="example1"
+                        />
+                        <label
+                           className="custom-control-label"
+                           htmlFor="customCheck"
+                        >
+                           Show delete button
+                        </label>
+                     </div>
+                  </form>
+
+                  <a href="all-cards">
+                     <input
+                        className="btn btn-outline-danger"
+                        type="button"
+                        id="deleteCard"
+                        value="Delete this Card"
+                     />
+                  </a>
+               </div>
+            </div>
+         </AppTemplate>
+      </div>
+   );
 }

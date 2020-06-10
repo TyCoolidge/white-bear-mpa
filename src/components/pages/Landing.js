@@ -37,11 +37,11 @@ export default function Landing() {
                         <div className="card">
                            <div className="card-body">
                               <h2 className="card-title">Nice to meet you</h2>
-                              <p style={{ fontSize: "13px;" }} className="mb-1">
+                              <p style={{ fontSize: "13px" }} className="mb-1">
                                  Sign up for White Bear. Free forever.
                               </p>
                               <p
-                                 style={{ color: " blue", fontSize: "13px;" }}
+                                 style={{ color: " blue", fontSize: "13px" }}
                                  className="mb-5"
                                  id="signUpText"
                               >
@@ -68,8 +68,8 @@ export default function Landing() {
                                     id="warningEmail"
                                     className="mb-4 invalid-feedback"
                                     style={{
-                                       display: "none;",
-                                       fontSize: "13px;",
+                                       display: "none",
+                                       fontSize: "13px",
                                     }}
                                  >
                                     Please enter your email address.
@@ -79,7 +79,7 @@ export default function Landing() {
                                     className="mb-4 invalid-feedback"
                                     style={{
                                        display: "none",
-                                       fontSize: "13px;",
+                                       fontSize: "13px",
                                     }}
                                  >
                                     Please enter a email that contains three
@@ -99,7 +99,7 @@ export default function Landing() {
                                     className="mb-3 invalid-feedback"
                                     style={{
                                        display: "none",
-                                       fontSize: "13px;",
+                                       fontSize: "13px",
                                     }}
                                  >
                                     Please enter your password.
@@ -109,7 +109,7 @@ export default function Landing() {
                                     className="invalid-feedback mb-1"
                                     style={{
                                        display: "none",
-                                       fontSize: "13px;",
+                                       fontSize: "13px",
                                     }}
                                  >
                                     Your password must be at least 9 characters.
@@ -119,7 +119,7 @@ export default function Landing() {
                                     className="invalid-feedback"
                                     style={{
                                        display: "none",
-                                       fontSize: "13px;",
+                                       fontSize: "13px",
                                     }}
                                  >
                                     Your email address cannot be used in your
@@ -130,7 +130,7 @@ export default function Landing() {
                                     className="invalid-feedback"
                                     style={{
                                        display: "none",
-                                       fontSize: "13px;",
+                                       fontSize: "13px",
                                     }}
                                  >
                                     Do not use a common password.
@@ -169,7 +169,7 @@ export default function Landing() {
                                     className="mb-4 invalid-feedback"
                                     style={{
                                        display: "none",
-                                       fontSize: "13px;",
+                                       fontSize: "13px",
                                     }}
                                  >
                                     Please enter your email address.
@@ -186,7 +186,7 @@ export default function Landing() {
                                     className="mb-4 invalid-feedback"
                                     style={{
                                        display: "none",
-                                       fontSize: "13px;",
+                                       fontSize: "13px",
                                     }}
                                  >
                                     Please enter your password.
@@ -196,7 +196,7 @@ export default function Landing() {
                                     className="invalid-feedback"
                                     style={{
                                        display: "none",
-                                       fontSize: "13px;",
+                                       fontSize: "13px",
                                     }}
                                  >
                                     Your password must be at least 9 characters.
