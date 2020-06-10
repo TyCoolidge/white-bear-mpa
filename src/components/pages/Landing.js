@@ -204,7 +204,7 @@ export default function Landing() {
                                  {/* <!-- disable log in if email/ password fields are not accepted --> */}
                                  <div className="float-right">
                                     <a
-                                       href="create-answer.html"
+                                       href="create-answer"
                                        type="submit"
                                        className="btn btn-success mt-5 btn-lg"
                                        id="logIn"
