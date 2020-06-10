@@ -4,7 +4,7 @@ import LogoLanding from "../../icons/logo-landing.png";
 export default function Landing() {
    return (
       <div className="background-image">
-         <div className="container mt-7">
+         <div className="container">
             <div className="row">
                <div className="col">
                   {/* <!-- NEED TO MAKE MOBILE FRIENDLY 
@@ -12,7 +12,7 @@ export default function Landing() {
           className="col-12 col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 col-md-10 offset-md-1"
        > -->
           <!--First card, needs correct fonts and margins, also needs drop down when clicking sign up--> */}
-                  <div className="row mb-3">
+                  <div className="row mb-3 mt-7">
                      <div className="col">
                         <div className="d-flex justify-content-start">
                            <img
