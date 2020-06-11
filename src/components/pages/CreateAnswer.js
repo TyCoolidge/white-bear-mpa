@@ -1,5 +1,6 @@
 import React from "react";
 import AppTemplate from "../ui/AppTemplate";
+import { Link } from "react-router-dom";
 
 export default function CreateAnswer() {
    return (
@@ -35,15 +36,15 @@ export default function CreateAnswer() {
          <div className="clearfix"></div>
 
          {/* <!-- make Button link to next page--> */}
-         <a
-            href="create-imagery.html"
+         <Link
+            to="create-imagery"
             type="button"
             className="btn btn-outline-primary btn-lg disabled"
             style={{ float: "right" }}
             id="nextButton"
          >
             Next
-         </a>
+         </Link>
       </AppTemplate>
    );
 }

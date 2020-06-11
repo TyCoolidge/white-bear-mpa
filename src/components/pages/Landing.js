@@ -1,5 +1,6 @@
 import React from "react";
 import LogoLanding from "../../icons/logo-landing.png";
+import { Link } from "react-router-dom";
 
 export default function Landing() {
    return (
@@ -203,14 +204,15 @@ export default function Landing() {
                                  </p>
                                  {/* <!-- disable log in if email/ password fields are not accepted --> */}
                                  <div className="float-right">
-                                    <a
-                                       href="create-answer"
+                                    <Link
+                                       to="create-answer"
                                        type="submit"
                                        className="btn btn-success mt-5 btn-lg"
                                        id="logIn"
                                     >
                                        Log in
-                                    </a>
+                                    </Link>
+                                    {/* Link used to stay in React, acts like <a> */}
                                  </div>
                               </form>
                            </div>

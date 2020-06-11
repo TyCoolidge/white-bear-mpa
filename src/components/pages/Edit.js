@@ -3,6 +3,7 @@ import successIcon from "../../icons/success.svg";
 import errorIcon from "../../icons/error.svg";
 import saveIcon from "../../icons/save.svg";
 import AppTemplate from "../ui/AppTemplate";
+import { Link } from "react-router-dom";
 
 export default function Edit() {
    return (
@@ -70,14 +71,14 @@ export default function Edit() {
             {/* <!-- create margin between card and buttons --> */}
             <div className="clearfix"></div>
             {/* <!-- make Button link to next page--> */}
-            <a
-               href="all-cards"
+            <Link
+               to="/all-cards"
                type="button"
                className="btn btn-link"
                style={{ float: "left" }}
             >
                Discard changes
-            </a>
+            </Link>
             <div className="float-right">
                <button
                   type="button"
@@ -135,14 +136,13 @@ export default function Edit() {
                      </div>
                   </form>
 
-                  <a href="all-cards">
-                     <input
-                        className="btn btn-outline-danger"
-                        type="button"
-                        id="deleteCard"
-                        value="Delete this Card"
-                     />
-                  </a>
+                  <Link
+                     to="/all-cards"
+                     className="btn btn-outline-danger"
+                     id="deleteCard"
+                  >
+                     Delete this Card
+                  </Link>
                </div>
             </div>
          </AppTemplate>

@@ -1,6 +1,7 @@
 import React from "react";
 import thumbsUp from "../../icons/thumbs-up.svg";
 import AppTemplate from "../ui/AppTemplate";
+import { Link } from "react-router-dom";
 
 export default function ReviewImagery() {
    return (
@@ -27,23 +28,27 @@ export default function ReviewImagery() {
          </div>
 
          {/* <!-- make Button link to next page--> */}
-         <a
-            href="edit"
+         <Link
+            to="/edit"
             type="button"
             className="btn btn-link"
             style={{ float: "left" }}
          >
             Edit
-         </a>
+         </Link>
          <div className="float-right">
-            <a
+            <button
                href="review-answer"
                type="button"
                className="btn btn-outline-primary mr-5"
             >
                Needs Work
-            </a>
-            <a href="review-empty" type="button" className="btn btn-secondary ">
+            </button>
+            <button
+               href="review-empty"
+               type="button"
+               className="btn btn-secondary "
+            >
                <img
                   src={thumbsUp}
                   width="20px"
@@ -52,7 +57,7 @@ export default function ReviewImagery() {
                   alt="thumbsUp"
                />
                Got it
-            </a>
+            </button>
          </div>
       </AppTemplate>
    );

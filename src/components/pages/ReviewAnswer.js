@@ -1,5 +1,6 @@
 import React from "react";
 import AppTemplate from "../ui/AppTemplate";
+import { Link } from "react-router-dom";
 
 export default function ReviewAnswer() {
    return (
@@ -27,13 +28,13 @@ export default function ReviewAnswer() {
                Previous card
             </button>
             <div className="float-right">
-               <a
-                  href="review-imagery"
+               <Link
+                  to="review-imagery"
                   type="button"
                   className="btn btn-outline-primary"
                >
                   Show answer
-               </a>
+               </Link>
             </div>
          </AppTemplate>
       </div>

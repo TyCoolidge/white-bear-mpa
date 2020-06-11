@@ -1,8 +1,9 @@
 import React from "react";
 import editIcon from "../../icons/edit.svg";
 import AppTemplate from "../ui/AppTemplate";
+import { Link } from "react-router-dom";
 
-export default function AllCards() {
+export default function AllCards(props) {
    return (
       <AppTemplate>
          {/* <!-- top of all cards page --> */}
@@ -62,8 +63,8 @@ export default function AllCards() {
                </div>
             </div>
             <div className=" mt-5 col-3">
-               <a
-                  href="edit"
+               <Link
+                  to="/edit"
                   type="button"
                   className="btn btn-link float-right"
                >
@@ -75,7 +76,7 @@ export default function AllCards() {
                      alt="edit icon"
                   />
                   Edit
-               </a>
+               </Link>
             </div>
          </div>
          {/* <!-- second edit button--> */}
@@ -103,8 +104,8 @@ export default function AllCards() {
                </div>
             </div>
             <div className="col-3">
-               <a
-                  href="edit"
+               <Link
+                  to="/edit"
                   type="button"
                   className="btn btn-link float-right"
                >
@@ -116,7 +117,7 @@ export default function AllCards() {
                      alt="edit icon"
                   />
                   Edit
-               </a>
+               </Link>
             </div>
          </div>
       </AppTemplate>
