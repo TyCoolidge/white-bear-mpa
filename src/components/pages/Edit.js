@@ -4,6 +4,10 @@ import errorIcon from "../../icons/error.svg";
 import saveIcon from "../../icons/save.svg";
 import AppTemplate from "../ui/AppTemplate";
 import { Link } from "react-router-dom";
+import memoryCards from "../../mock-data/memory-cards";
+import toDisplayDate from "date-fns/format";
+
+const memoryCard = memoryCards[0];
 
 export default function Edit() {
    return (
@@ -53,16 +57,19 @@ export default function Edit() {
                <div className="card bg-primary">
                   <div className="card-body">
                      {/* <!--add rows --> */}
-                     <textarea rows="7" autoFocus="autofocus"></textarea>
+                     {/* <textarea rows="7" autoFocus="autofocus"></textarea> */}
+                     <textarea rows="7" autoFocus="autofocus-end">
+                        {memoryCard.imagery}
+                     </textarea>
                   </div>
                </div>
 
                <div className="card bg-secondary">
                   <div className="card-body">
-                     Far far away, behind the word mountains, far from the
-                     countries Vokalia and Consonantia, there live the blind
-                     texts. Separated they live in Bookmarksgrove right at the
-                     coast of the Semantics, a large
+                     {" "}
+                     <textarea rows="4" autoFocus="autofocus-end">
+                        {memoryCard.answer}
+                     </textarea>
                   </div>
                </div>
             </div>
@@ -108,11 +115,17 @@ export default function Edit() {
                   <p className="mb-2 text-muted">Consecutives:</p>
                </div>
 
-               <div className="col-6 ml-5">
-                  <p className="mb-2">Dec. 21, 2019</p>
-                  <p className="mb-2">Dec. 31, 2019</p>
-                  <p className="mb-2">Jul. 14, 2020</p>
-                  <p className="mb-2">4</p>
+               <div className="col-6 ml-6">
+                  <p className="mb-2">
+                     {toDisplayDate(memoryCard.createdAt, "MMM. d, y")}
+                  </p>
+                  <p className="mb-2">
+                     {toDisplayDate(memoryCard.lastAttemptAt, "MMM. d, y")}
+                  </p>
+                  <p className="mb-2">
+                     {toDisplayDate(memoryCard.nextAttemptAt, "MMM. d, y")}
+                  </p>
+                  <p className="mb-2">{memoryCard.totalSuccessfulAttempts}</p>
                </div>
             </div>
 
@@ -120,7 +133,7 @@ export default function Edit() {
             <div className="row">
                <div className="col">
                   <form>
-                     <div className="custom-control custom-checkbox">
+                     <div className="custom-control custom-checkbox mb-2">
                         <input
                            type="checkbox"
                            className="custom-control-input"

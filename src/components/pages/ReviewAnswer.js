@@ -1,42 +1,59 @@
 import React from "react";
+import thumbsUp from "../../icons/thumbs-up.svg";
 import AppTemplate from "../ui/AppTemplate";
 import { Link } from "react-router-dom";
+import memoryCards from "../../mock-data/memory-cards";
+
+const memoryCard = memoryCards[0];
 
 export default function ReviewAnswer() {
    return (
-      <div>
-         <AppTemplate>
-            {/* <!--TOP CARD FOR FUTURE PAGES--> */}
-            <div className="my-5">
-               <div className="card bg-primary">
-                  <div className="card-body" style={{ color: "white" }}>
-                     Far far away, behind the word mountains, far from the
-                     countries Vokalia and Consonantia, there live the blind
-                     texts. Separated they live in Bookmarksgrove right at the
-                     coast of the Semantics, a large language ocean. A small
-                     river named Duden flows by their place and supplies it with
-                     the necessary
-                  </div>
+      <AppTemplate>
+         {/* <!--TOP CARD FOR FUTURE PAGES--> */}
+         <div className="my-5">
+            <div className="card bg-primary">
+               <div className="card-body" style={{ color: "white" }}>
+                  {memoryCard.imagery}
                </div>
             </div>
-            {/* <!-- make Button link to next page--> */}
-            <button
-               type="button"
-               className="btn btn-link"
-               style={{ float: "left" }}
-            >
-               Previous card
-            </button>
-            <div className="float-right">
-               <Link
-                  to="review-imagery"
-                  type="button"
-                  className="btn btn-outline-primary"
-               >
-                  Show answer
-               </Link>
+
+            <div className="card bg-secondary">
+               <div className="card-body">{memoryCard.answer}</div>
             </div>
-         </AppTemplate>
-      </div>
+         </div>
+
+         {/* <!-- make Button link to next page--> */}
+         <Link
+            to="/edit"
+            type="button"
+            className="btn btn-link"
+            style={{ float: "left" }}
+         >
+            Edit
+         </Link>
+         <div className="float-right">
+            <Link
+               to="/review-imagery"
+               type="button"
+               className="btn btn-outline-primary mr-5"
+            >
+               Needs Work
+            </Link>
+            <button
+               href="review-empty"
+               type="button"
+               className="btn btn-secondary "
+            >
+               <img
+                  src={thumbsUp}
+                  width="20px"
+                  style={{ marginBottom: "5px" }}
+                  className="mr-2"
+                  alt="thumbsUp"
+               />
+               Got it
+            </button>
+         </div>
+      </AppTemplate>
    );
 }
