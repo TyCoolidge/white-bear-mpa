@@ -1,19 +1,106 @@
 import React from "react";
+import classnames from "classnames";
+import { Link } from "react-router-dom";
+import hash from "object-hash";
+import { v4 as getUuid } from "uuid";
 
 export default class SignUp extends React.Component {
    constructor(props) {
       super(props);
-      console.log("In a new class component!");
+
       this.state = {
-         isDisplayingSignUpInputs: false,
+         isDisplayingInputs: false,
+         emailError: "",
+         passwordError: "",
+         hasEmailError: false, // error will not display by default
+         hasPasswordError: false,
       };
    }
 
-   toggleSignUpInputs() {
+   showInputs() {
       //  function assigned to sign up button, changes current state to equal the opposite state which hides our sign up inputs
       this.setState({
-         isDisplayingSignUpInputs: !this.state.isDisplayingSignUpInputs,
+         isDisplayingInputs: true,
       });
+   }
+
+   async setEmailState(emailInput) {
+      // eslint-disable-next-line
+      const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (emailInput === "")
+         this.setState({
+            emailError: "Please enter your email address",
+            hasEmailError: true, //will display if input is empty
+         });
+      else if (emailRegex.test(emailInput.toLowerCase()) === false) {
+         this.setState({
+            emailError: "Please enter a valid email address",
+            hasEmailError: true, //will display if email doesnt fit regex
+         });
+      } else {
+         this.setState({ emailError: "", hasEmailError: false });
+      }
+   }
+
+   checkHasLocalPart(passwordInput, emailInput) {
+      const localPart = emailInput.split("@")[0];
+      if (localPart === "") return false;
+      //removes bug of displaying uniqChars error message
+      else if (localPart.length < 4) return false;
+      else return passwordInput.includes(localPart); // returns boolean(true)
+   }
+
+   async setPasswordState(passwordInput, emailInput) {
+      console.log(passwordInput);
+      const uniqChars = [...new Set(passwordInput)];
+      //array of unique characters
+      if (passwordInput === "") {
+         this.setState({
+            passwordError: "Please create a password",
+            hasPasswordError: true, //will display if input is empty
+         });
+      } else if (passwordInput.length < 9) {
+         this.setState({
+            passwordError: "Your password must be at least 9 characters",
+            hasPasswordError: true,
+         });
+      } else if (this.checkHasLocalPart(passwordInput, emailInput)) {
+         // returns boolean
+         this.setState({
+            passwordError:
+               "Your email address cannot be used in your password.",
+            hasPasswordError: true,
+         });
+      } else if (uniqChars.length < 3) {
+         this.setState({
+            passwordError:
+               "Your password must contain at least 3 unique characters ",
+            hasPasswordError: true,
+         });
+      } else {
+         this.setState({ passwordError: "", hasPasswordError: false });
+      }
+   }
+
+   async validateAndCreateUser() {
+      //need async in ordxer for await to work
+      const emailInput = document.getElementById("email-input").value;
+      const passwordInput = document.getElementById("create-password-input")
+         .value;
+      await this.setEmailState(emailInput); //waits until the promise of setEmailState has settled and returns result
+      await this.setPasswordState(passwordInput, emailInput); //waits until the promise of setPasswordState has settled and returns result
+      if (
+         this.state.hasEmailError === false &&
+         this.state.hasPasswordError === false
+      ) {
+         const user = {
+            id: getUuid(),
+            email: emailInput,
+            password: hash(passwordInput),
+            createdAt: Date.now(),
+         };
+         console.log(user);
+      }
    }
 
    render() {
@@ -25,7 +112,7 @@ export default class SignUp extends React.Component {
                   <p style={{ fontSize: "13px" }} className="mb-1">
                      Sign up for White Bear. Free forever.
                   </p>
-                  {this.isDisplayingSignUpInputs && (
+                  {this.state.isDisplayingInputs && (
                      <>
                         <p
                            style={{ color: " blue", fontSize: "13px" }}
@@ -36,106 +123,82 @@ export default class SignUp extends React.Component {
                         </p>
 
                         {/* <!-- Dragdown menu once click on signup --> */}
-                        <div id="dragdown">
-                           <h4 className="text-muted">Email address</h4>
-                           <input
-                              className="form-control thick-border"
-                              type="text"
-                              required
-                              id="emailRequired"
-                           />
+                        <h4 className="text-muted">Email address</h4>
+                        <input
+                           className={classnames({
+                              "form-control": true,
+                              "thick-border": true,
+                              "is-invalid": this.state.hasEmailError,
+                           })} ///format for classnames, set the class is invalid to current state of hasEmailError which is set at false
+                           type="email"
+                           id="email-input"
+                        />
+                        {this.state.hasEmailError && (
                            <p
-                              id="warningEmail"
-                              className="mb-4 invalid-feedback"
+                              className="text-danger mt-1"
                               style={{
-                                 display: "none",
-                                 fontSize: "13px",
+                                 fontSize: "14px",
                               }}
                            >
-                              Please enter your email address.
+                              {this.state.emailError}
                            </p>
-                           <p
-                              id="noUniqueCharacters"
-                              className="mb-4 invalid-feedback"
-                              style={{
-                                 display: "none",
-                                 fontSize: "13px",
-                              }}
-                           >
-                              Please enter a email that contains three unique
-                              characters
-                           </p>
-                           <h4 className="text-muted mt-2">
-                              Create a password
-                           </h4>
-                           <input
-                              className="form-control thick-border mb-1"
-                              type="password"
-                              required
-                              id="requiredPassword"
-                           />
+                        )}
+                        <h4 className="text-muted mt-2">Create a password</h4>
+                        <input
+                           className={classnames({
+                              "form-control": true,
+                              "thick-border": true,
+                              "mb-1": true,
+                              "is-invalid": this.state.hasPasswordError,
+                           })}
+                           type="password"
+                           id="create-password-input"
+                        />
+                        {this.state.hasPasswordError && (
                            <p
                               id="warningPassword"
-                              className="mb-3 invalid-feedback"
+                              className="mb-3 text-danger"
                               style={{
-                                 display: "none",
-                                 fontSize: "13px",
+                                 fontSize: "14px",
                               }}
                            >
-                              Please enter your password.
+                              {this.state.passwordError}
                            </p>
-                           <p
-                              id="warningPasswordCharacters"
-                              className="invalid-feedback mb-1"
-                              style={{
-                                 display: "none",
-                                 fontSize: "13px",
-                              }}
-                           >
-                              Your password must be at least 9 characters.
-                           </p>
-                           <p
-                              id="noEmailPassword"
-                              className="invalid-feedback"
-                              style={{
-                                 display: "none",
-                                 fontSize: "13px",
-                              }}
-                           >
-                              Your email address cannot be used in your
-                              password.
-                           </p>
-                           <p
-                              id="warningNoCommon"
-                              className="invalid-feedback"
-                              style={{
-                                 display: "none",
-                                 fontSize: "13px",
-                              }}
-                           >
-                              Do not use a common password.
-                           </p>
-                           <button
-                              href="#"
-                              type="button"
-                              className="mt-5 btn btn-success btn-block"
-                              id="letsGo"
-                           >
-                              Let's go!
-                           </button>
-                        </div>
+                        )}
+
+                        <p
+                           id="warningNoCommon"
+                           className="invalid-feedback"
+                           style={{
+                              display: "none",
+                              fontSize: "13px",
+                           }}
+                        >
+                           Do not use a common password.
+                        </p>
+                        <Link
+                           to="#"
+                           className="mt-5 btn btn-success btn-block"
+                           onClick={() => {
+                              this.validateAndCreateUser();
+                           }}
+                        >
+                           Let's go!
+                        </Link>
                      </>
                   )}
-                  {!this.isDisplayingSignUpInputs && (
-                     <button
-                        className="btn btn-success btn-block mt-5"
+                  {/*if this.state is the opposite , then render button  */}
+                  {!this.state.isDisplayingInputs && (
+                     <Link
+                        to="#"
+                        className="btn btn-success btn-block mt-2"
                         //  function assigned to onClick, should return sign up menu
                         onClick={() => {
-                           this.toggleSignUpInputs();
+                           this.showInputs();
                         }}
                      >
                         Sign up
-                     </button>
+                     </Link>
                   )}
                </div>
             </div>

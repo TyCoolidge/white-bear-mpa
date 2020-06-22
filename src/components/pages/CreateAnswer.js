@@ -1,50 +1,76 @@
 import React from "react";
 import AppTemplate from "../ui/AppTemplate";
 import { Link } from "react-router-dom";
+import classnames from "classnames";
+import { checkIsOver, MAX_CARD_CHARS } from "../../utils/helpers";
 
-export default function CreateAnswer() {
-   return (
-      <AppTemplate>
-         <h4 className="my-4 text-center text-muted">Add an answer</h4>
+export default class CreateAnswer extends React.Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         addAnswer: "",
+      };
+   }
 
-         {/* <!--TOP CARD FOR FUTURE PAGES--> */}
-         {/* 
-        <!-- <div className="card bg-primary col-md-12">
-           <div className="card-body" style="color: white;">
-              Far far away, behind the word mountains, far from the
-              countries Vokalia and Consonantia, there live the blind
-              texts. Separated they live in Bookmarksgrove right at the
-              coast of the Semantics, a large
-           </div>
-        </div> --> */}
-         <div className="mb-2">
-            <div className="card bg-secondary">
-               <div className="card-body">
-                  <textarea
-                     rows="7"
-                     autoFocus="autofocus"
-                     id="textInput"
-                  ></textarea>
+   setAddAnswerText(e) {
+      this.setState({ addAnswer: e.target.value });
+   }
+
+   checkIfAnswerHasValidCharCount() {
+      if (
+         this.state.addAnswer.length > MAX_CARD_CHARS ||
+         this.state.addAnswer.length === 0
+      ) {
+         return true;
+      } else return false;
+   }
+
+   render() {
+      return (
+         <AppTemplate>
+            <h4 className="my-4 text-center text-muted">Add an answer</h4>
+
+            <div className="mb-2">
+               <div className="card bg-secondary">
+                  <div className="card-body">
+                     <textarea
+                        rows="7"
+                        autoFocus="autofocus"
+                        id="textInput"
+                        onChange={(e) => this.setAddAnswerText(e)}
+                     ></textarea>
+                  </div>
                </div>
             </div>
-         </div>
-         {/* <!-- character count--> */}
-         <p className="float-right mb-4" id="overLimit">
-            <span id="wordCount">0</span>/240
-         </p>
-         {/* <!-- create margin between card and buttons --> */}
-         <div className="clearfix"></div>
+            {/* <!-- character count--> */}
+            <p className="float-right mb-4 text-muted" id="overLimit">
+               <span
+                  className={classnames({
+                     "text-danger": checkIsOver(
+                        this.state.addAnswer,
+                        MAX_CARD_CHARS
+                     ),
+                  })}
+               >
+                  {this.state.addAnswer.length}/{MAX_CARD_CHARS}
+               </span>
+            </p>
+            {/* <!-- create margin between card and buttons --> */}
+            <div className="clearfix"></div>
 
-         {/* <!-- make Button link to next page--> */}
-         <Link
-            to="create-imagery"
-            type="button"
-            className="btn btn-outline-primary btn-lg disabled"
-            style={{ float: "right" }}
-            id="nextButton"
-         >
-            Next
-         </Link>
-      </AppTemplate>
-   );
+            {/* <!-- make Button link to next page--> */}
+            <Link
+               to="create-imagery"
+               type="button"
+               className={classnames("btn btn-outline-primary btn-lg", {
+                  disabled: this.checkIfAnswerHasValidCharCount(),
+               })}
+               style={{ float: "right" }}
+               id="nextButton"
+            >
+               Next
+            </Link>
+         </AppTemplate>
+      );
+   }
 }

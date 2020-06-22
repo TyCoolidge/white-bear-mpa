@@ -194,3 +194,8 @@ textarea {
 .custom-control-input:checked ~ .custom-control-label::after {
    background-color: $primary;
 }
+
+.disabled {
+   pointer-events: auto;
+   cursor: not-allowed;
+}
