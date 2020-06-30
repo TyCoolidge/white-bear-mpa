@@ -17,7 +17,14 @@ export default class Edit extends React.Component {
       this.state = {
          answerText: memoryCard.answer,
          imageryText: memoryCard.imagery,
+         isDeleteButtonDisplayed: false,
       };
+   }
+
+   showDeleteButton() {
+      this.setState({
+         isDeleteButtonDisplayed: !this.state.isDeleteButtonDisplayed,
+      });
    }
 
    checkHasInvalidCharCount() {
@@ -143,6 +150,7 @@ export default class Edit extends React.Component {
                </Link>
                <div className="float-right">
                   <Link
+                     to="#"
                      type="button"
                      className={classnames("btn btn-primary btn-lg", {
                         disabled: this.checkHasInvalidCharCount(),
@@ -198,6 +206,9 @@ export default class Edit extends React.Component {
                               className="custom-control-input"
                               id="customCheck"
                               name="example1"
+                              onClick={() => {
+                                 this.showDeleteButton();
+                              }}
                            />
                            <label
                               className="custom-control-label"
@@ -207,14 +218,15 @@ export default class Edit extends React.Component {
                            </label>
                         </div>
                      </form>
-
-                     <Link
-                        to="/all-cards"
-                        className="btn btn-outline-danger "
-                        id="deleteCard"
-                     >
-                        Delete this Card
-                     </Link>
+                     {this.state.isDeleteButtonDisplayed && (
+                        <Link
+                           to="/all-cards"
+                           className="btn btn-outline-danger mb-2 "
+                           id="deleteCard"
+                        >
+                           Delete this Card
+                        </Link>
+                     )}
                   </div>
                </div>
             </AppTemplate>

@@ -12,11 +12,11 @@ export default class CreateAnswer extends React.Component {
       };
    }
 
-   setAddAnswerText(e) {
+   setAnswerText(e) {
       this.setState({ addAnswer: e.target.value });
    }
 
-   checkIfAnswerHasValidCharCount() {
+   checkHasInvalidCharCount() {
       if (
          this.state.addAnswer.length > MAX_CARD_CHARS ||
          this.state.addAnswer.length === 0
@@ -37,7 +37,7 @@ export default class CreateAnswer extends React.Component {
                         rows="7"
                         autoFocus="autofocus"
                         id="textInput"
-                        onChange={(e) => this.setAddAnswerText(e)}
+                        onChange={(e) => this.setAnswerText(e)}
                      ></textarea>
                   </div>
                </div>
@@ -63,7 +63,7 @@ export default class CreateAnswer extends React.Component {
                to="create-imagery"
                type="button"
                className={classnames("btn btn-outline-primary btn-lg", {
-                  disabled: this.checkIfAnswerHasValidCharCount(),
+                  disabled: this.checkHasInvalidCharCount(),
                })}
                style={{ float: "right" }}
                id="nextButton"

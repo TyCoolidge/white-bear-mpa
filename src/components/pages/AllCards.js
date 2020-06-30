@@ -2,52 +2,101 @@ import React from "react";
 import AppTemplate from "../ui/AppTemplate";
 import MemoryCard from "../ui/MemoryCard";
 import memoryCards from "../../mock-data/memory-cards";
+import orderBy from "lodash/orderBy";
 
-export default function AllCards() {
-   return (
-      <AppTemplate>
-         {/* <!-- top of all cards page --> */}
-         <div className="input-group-prepend mt-4 mb-4">
-            <input
-               type="text"
-               className="form-control col-8 thick-border"
-               placeholder="Search for a word"
-            />
-            <button
-               type="submit"
-               className="btn btn-primary btn-sm col-3 offset-1"
-            >
-               Search
-            </button>
-            <div className="clearfix"></div>
-         </div>
-         {/* <!-- come back to fix dropdown --> */}
+export default class AllCards extends React.Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         allCards: orderBy(memoryCards, "createdAt", "desc"),
+         displayedCards: orderBy(memoryCards, "createdAt", "desc"),
+         orderBy: '["createdAt", "desc"]', //default value
+      };
+   }
 
-         <div className="row mb-6">
-            <div className="col-4">
-               <p className="text-muted mt-2">Sort cards by</p>
-            </div>
-            <div className="col-8">
-               <select className="thick-border form-control">
-                  <option defaultValue>Most recent</option>
-                  <option value="1">Easiest</option>
-                  <option value="2">Hardest</option>
-                  <option value="3">Oldest</option>
-               </select>
-            </div>
-         </div>
-         <div className="clearfix"></div>
+   filteringCardsWithSearch() {
+      const searchInput = document
+         .getElementById("search-input")
+         .value.toLowerCase();
+      const allCards = [...this.state.allCards];
+      const fillteredCards = allCards.filter((card) => {
+         const cardBody = card.imagery + card.answer; //filter will search for words in both top and bottom of card
+         return cardBody.toLowerCase().indexOf(searchInput) >= 0;
+      });
+      const orderArr = JSON.parse(this.state.orderBy);
+      const orderedCards = orderBy(fillteredCards, ...orderArr);
+      this.setState({ displayedCards: orderedCards });
+   }
+   setCardOrder(e) {
+      //"e" is synthetic event
+      this.setState({ orderBy: e.target.value }, () => {
+         // changes state of object by giving it current value of selected target in dropdown menu
+         return this.filteringCardsWithSearch(); // return the filteredCards that follow the order parameters
+      });
+      console.log(e.target.value);
+   }
 
-         {memoryCards.map((memoryCard) => {
-            return (
-               <MemoryCard
-                  answer={memoryCard.answer}
-                  imagery={memoryCard.imagery}
-                  key={memoryCard.id}
+   render() {
+      return (
+         <AppTemplate>
+            {/* <!-- top of all cards page --> */}
+            <div className="input-group-prepend mt-4 mb-4">
+               <input
+                  type="text"
+                  className="form-control col-8 thick-border"
+                  placeholder="Search for a word"
+                  id="search-input"
+                  // onChange={() => {
+                  //    this.filteringCardsWithSearch();
+                  // }}
                />
-            );
-         })}
-         {/* key = allows react to iterate over data quickly */}
-      </AppTemplate>
-   );
+               <button
+                  type="submit"
+                  className="btn btn-primary btn-sm col-3 offset-1"
+                  onClick={() => {
+                     this.filteringCardsWithSearch();
+                  }}
+               >
+                  Search
+               </button>
+               <div className="clearfix"></div>
+            </div>
+            {/* <!-- come back to fix dropdown --> */}
+
+            <div className="row mb-6">
+               <div className="col-4">
+                  <p className="text-muted mt-2">Sort cards by</p>
+               </div>
+               <div className="col-8">
+                  <select
+                     value={this.state.orderBy}
+                     className="thick-border form-control"
+                     onChange={(e) => this.setCardOrder(e)}
+                  >
+                     <option value='["createdAt", "desc"]'>Most recent</option>
+                     <option value='[["totalSuccessfulAttempts", "createdAt"], ["desc", "desc"]]'>
+                        Easiest
+                     </option>
+                     <option value='[["totalSuccessfulAttempts", "createdAt"], ["asc", "asc"]]'>
+                        Hardest
+                     </option>
+                     <option value='["createdAt", "asc"]'>Oldest</option>
+                  </select>
+               </div>
+            </div>
+            <div className="clearfix"></div>
+
+            {this.state.displayedCards.map((memoryCard) => {
+               return (
+                  <MemoryCard
+                     answer={memoryCard.answer}
+                     imagery={memoryCard.imagery}
+                     key={memoryCard.id}
+                  />
+               );
+            })}
+            {/* key = allows react to iterate over data quickly */}
+         </AppTemplate>
+      );
+   }
 }

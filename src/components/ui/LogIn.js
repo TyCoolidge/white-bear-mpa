@@ -1,10 +1,11 @@
 import React from "react";
 import classnames from "classnames";
-import { Link } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import hash from "object-hash";
 import { v4 as getUuid } from "uuid";
+import { EMAIL_REGEX } from "../../utils/helpers";
 
-export default class LogIn extends React.Component {
+class LogIn extends React.Component {
    constructor(props) {
       super(props);
 
@@ -13,17 +14,17 @@ export default class LogIn extends React.Component {
          logInPasswordError: "",
          hasLogInEmailError: false,
          hasLogInPasswordError: false,
+         emailText: "",
+         passwordText: "",
       };
    }
    async setLogInEmailState(logInEmailInput) {
-      // eslint-disable-next-line
-      const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (logInEmailInput === "")
          this.setState({
             logInEmailError: "Please enter your email address",
             hasLogInEmailError: true, //will display if input is empty
          });
-      else if (emailRegex.test(logInEmailInput.toLowerCase()) === false) {
+      else if (EMAIL_REGEX.test(logInEmailInput.toLowerCase()) === false) {
          this.setState({
             logInEmailError: "Please enter a valid email address",
             hasLogInEmailError: true, //will display if email doesnt fit regex
@@ -38,7 +39,7 @@ export default class LogIn extends React.Component {
       //array of unique characters
       if (logInPasswordInput === "") {
          this.setState({
-            logInPasswordError: "Please create a password",
+            logInPasswordError: "Please enter your password",
             hasLogInPasswordError: true, //will display if input is empty
          });
       } else {
@@ -69,20 +70,10 @@ export default class LogIn extends React.Component {
             createdAt: Date.now(),
          };
          console.log(logInUser);
+         this.props.history.push("/create-answer");
       }
    }
 
-   checkIfLogInInputsAreValid(logInEmailInput) {
-      if (
-         this.state.hasLogInEmailError === false ||
-         this.state.hasLogInPasswordError === false ||
-         logInEmailInput !== ""
-      ) {
-         return "/create-answer";
-      } else {
-         return "#";
-      }
-   }
    render() {
       return (
          <div className="col-xl-4 offset-xl-1 col-lg-5 col-md-5 col-sm-6">
@@ -102,7 +93,6 @@ export default class LogIn extends React.Component {
                         })}
                         type="text"
                         id="welcome-back-email"
-                        required
                      />
                      {this.state.hasLogInEmailError && (
                         <p
@@ -124,7 +114,6 @@ export default class LogIn extends React.Component {
                         })}
                         type="password"
                         id="welcome-back-password"
-                        required
                      />
                      {this.state.hasLogInPasswordError && (
                         <p
@@ -141,10 +130,8 @@ export default class LogIn extends React.Component {
                      {/* <!-- disable log in if email/ password fields are not accepted --> */}
                      <div className="float-right">
                         <Link
-                           to={this.checkIfLogInInputsAreValid()}
-                           className={classnames("btn btn-success mt-5", {
-                              //   disabled: this.checkIfLogInInputsAreValid(),
-                           })}
+                           to="#"
+                           className="btn btn-success mt-5"
                            onClick={() => {
                               this.validateAndLogInUser();
                            }}
@@ -160,3 +147,4 @@ export default class LogIn extends React.Component {
       );
    }
 }
+export default withRouter(LogIn);
