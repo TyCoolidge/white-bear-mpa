@@ -8,10 +8,14 @@ import memoryCards from "../../mock-data/memory-cards";
 import toDisplayDate from "date-fns/format";
 import classnames from "classnames";
 import { checkIsOver, MAX_CARD_CHARS } from "../../utils/helpers";
+import { connect } from "react-redux";
+import isEmpty from "lodash/isEmpty";
+import without from "lodash/without";
+import { actions } from "../../store/actions";
 
 const memoryCard = memoryCards[0];
 
-export default class Edit extends React.Component {
+class Edit extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
@@ -43,6 +47,30 @@ export default class Edit extends React.Component {
    }
    setAnswerText(e) {
       this.setState({ answerText: e.target.value });
+   }
+   deleteCardFromStore() {
+      const deleteCard = this.props.editableCard.card;
+      const cards = this.props.queue.cards;
+      const filteredCards = without(cards, deleteCard);
+      console.log(filteredCards);
+      this.props.dispatch({
+         type: actions.STORE_QUEUED_CARDS,
+         payload: filteredCards,
+      });
+      if (this.props.queue.index >= this.props.filteredCards.length) {
+         this.props.dispatch({
+            type: actions.DECREMENT_QUEUE_INDEX,
+         });
+      }
+   }
+
+   changeRoute(prevRoute) {
+      if (this.props.queue.index >= this.props.queue.length) {
+         return "/review-empty";
+      }
+      if (prevRoute === "/review-answer") {
+         return "/review-imagery";
+      }
    }
 
    render() {
@@ -88,149 +116,185 @@ export default class Edit extends React.Component {
             <AppTemplate>
                <h4 className="my-4 text-center text-muted">Edit card</h4>
 
-               {/* <!--TOP CARD FOR FUTURE PAGES--> */}
-               <div className="mb-2">
-                  <div className="card bg-primary">
-                     <div className="card-body">
-                        {/* <!--add rows --> */}
-                        {/* <textarea rows="7" autoFocus="autofocus"></textarea> */}
-                        <textarea
-                           rows="7"
-                           defaultValue={memoryCard.imagery}
-                           onChange={(e) => this.setImageryText(e)}
-                        ></textarea>
-                     </div>
-                  </div>
-
-                  <div className="card bg-secondary">
-                     <div className="card-body">
-                        {" "}
-                        <textarea
-                           rows="4"
-                           defaultValue={memoryCard.answer}
-                           onChange={(e) => this.setAnswerText(e)}
-                        ></textarea>
-                     </div>
-                  </div>
-               </div>
-               {/* <!-- character count--> */}
-               <p className="float-right mb-5 text-muted">
-                  <span
-                     className={classnames({
-                        "text-danger": checkIsOver(
-                           this.state.imageryText,
-                           MAX_CARD_CHARS
-                        ),
-                     })}
-                  >
-                     Top: {this.state.imageryText.length}/{MAX_CARD_CHARS}
-                  </span>{" "}
-                  &nbsp;&nbsp;
-                  <span
-                     className={classnames({
-                        "text-danger": checkIsOver(
-                           this.state.answerText,
-                           MAX_CARD_CHARS
-                        ),
-                     })}
-                  >
-                     Bottom: {this.state.answerText.length}/{MAX_CARD_CHARS}
-                  </span>
-               </p>
-               {/* <!-- create margin between card and buttons --> */}
-               <div className="clearfix"></div>
-               {/* <!-- make Button link to next page--> */}
-               <Link
-                  to="/all-cards"
-                  type="button"
-                  className="btn btn-link"
-                  style={{ float: "left" }}
-               >
-                  Discard changes
-               </Link>
-               <div className="float-right">
-                  <Link
-                     to="#"
-                     type="button"
-                     className={classnames("btn btn-primary btn-lg", {
-                        disabled: this.checkHasInvalidCharCount(),
-                     })}
-                     id="save-imagery"
-                  >
-                     <img
-                        src={saveIcon}
-                        width="22px"
-                        style={{ marginTop: "-1px" }}
-                        className="mr-2"
-                        alt="save icon"
-                     />
-                     Save
-                  </Link>
-               </div>
-               <div className="clearfix"></div>
-
-               <h4 className="mt-5 mb-3 text-center text-muted">
-                  Card properties
-               </h4>
-               <div className="row mb-1">
-                  <div className="col-4">
-                     <p className="mb-2 text-muted">Created on:</p>
-                     <p className="mb-2 text-muted">Last attempt:</p>
-                     <p className="mb-2 text-muted">Next attempt:</p>
-                     <p className="mb-2 text-muted">Consecutives:</p>
-                  </div>
-
-                  <div className="col-6 ml-6">
-                     <p className="mb-2">
-                        {toDisplayDate(memoryCard.createdAt, "MMM. d, y")}
-                     </p>
-                     <p className="mb-2">
-                        {toDisplayDate(memoryCard.lastAttemptAt, "MMM. d, y")}
-                     </p>
-                     <p className="mb-2">
-                        {toDisplayDate(memoryCard.nextAttemptAt, "MMM. d, y")}
-                     </p>
-                     <p className="mb-2">
-                        {memoryCard.totalSuccessfulAttempts}
-                     </p>
-                  </div>
-               </div>
-
-               {/* <!-- Need to fix margins as well as checkbox color --> */}
-               <div className="row">
-                  <div className="col">
-                     <form>
-                        <div className="custom-control custom-checkbox mb-2">
-                           <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="customCheck"
-                              name="example1"
-                              onClick={() => {
-                                 this.showDeleteButton();
-                              }}
-                           />
-                           <label
-                              className="custom-control-label"
-                              htmlFor="customCheck"
-                           >
-                              Show delete button
-                           </label>
+               {isEmpty(this.props.editableCard) === false && ( //isEmpty checks if value is an empty object, collection, map, or set
+                  <>
+                     {/* <!--TOP CARD FOR FUTURE PAGES--> */}
+                     <div className="mb-2">
+                        <div className="card bg-primary">
+                           <div className="card-body">
+                              {/* <!--add rows --> */}
+                              {/* <textarea rows="7" autoFocus="autofocus"></textarea> */}
+                              <textarea
+                                 rows="7"
+                                 defaultValue={
+                                    this.props.editableCard.card.imagery
+                                 }
+                                 onChange={(e) => this.setImageryText(e)}
+                              ></textarea>
+                           </div>
                         </div>
-                     </form>
-                     {this.state.isDeleteButtonDisplayed && (
-                        <Link
-                           to="/all-cards"
-                           className="btn btn-outline-danger mb-2 "
-                           id="deleteCard"
+
+                        <div className="card bg-secondary">
+                           <div className="card-body">
+                              {" "}
+                              <textarea
+                                 rows="4"
+                                 defaultValue={
+                                    this.props.editableCard.card.answer
+                                 }
+                                 onChange={(e) => this.setAnswerText(e)}
+                              ></textarea>
+                           </div>
+                        </div>
+                     </div>
+                     {/* <!-- character count--> */}
+                     <p className="float-right mb-5 text-muted">
+                        <span
+                           className={classnames({
+                              "text-danger": checkIsOver(
+                                 this.state.imageryText,
+                                 MAX_CARD_CHARS
+                              ),
+                           })}
                         >
-                           Delete this Card
+                           Top: {this.state.imageryText.length}/{MAX_CARD_CHARS}
+                        </span>{" "}
+                        &nbsp;&nbsp;
+                        <span
+                           className={classnames({
+                              "text-danger": checkIsOver(
+                                 this.state.answerText,
+                                 MAX_CARD_CHARS
+                              ),
+                           })}
+                        >
+                           Bottom: {this.state.answerText.length}/
+                           {MAX_CARD_CHARS}
+                        </span>
+                     </p>
+                     {/* <!-- create margin between card and buttons --> */}
+                     <div className="clearfix"></div>
+                     {/* <!-- make Button link to next page--> */}
+                     <Link
+                        to={this.props.editableCard.prevRoute}
+                        type="button"
+                        className="btn btn-link"
+                        style={{ float: "left" }}
+                     >
+                        Discard changes
+                     </Link>
+                     <div className="float-right">
+                        <Link
+                           to={this.props.editableCard.prevRoute}
+                           type="button"
+                           className={classnames("btn btn-primary btn-lg", {
+                              disabled: this.checkHasInvalidCharCount(),
+                           })}
+                           id="save-imagery"
+                        >
+                           <img
+                              src={saveIcon}
+                              width="22px"
+                              style={{ marginTop: "-1px" }}
+                              className="mr-2"
+                              alt="save icon"
+                           />
+                           Save
                         </Link>
-                     )}
-                  </div>
-               </div>
+                     </div>
+                     <div className="clearfix"></div>
+
+                     <h4 className="mt-5 mb-3 text-center text-muted">
+                        Card properties
+                     </h4>
+                     <div className="row mb-1">
+                        <div className="col-4">
+                           <p className="mb-2 text-muted">Created on:</p>
+                           <p className="mb-2 text-muted">Last attempt:</p>
+                           <p className="mb-2 text-muted">Next attempt:</p>
+                           <p className="mb-2 text-muted">Consecutives:</p>
+                        </div>
+
+                        <div className="col-6 ml-6">
+                           <p className="mb-2">
+                              {toDisplayDate(
+                                 this.props.editableCard.card.createdAt,
+                                 "MMM. d, y"
+                              )}
+                           </p>
+                           <p className="mb-2">
+                              {toDisplayDate(
+                                 this.props.editableCard.card.lastAttemptAt,
+                                 "MMM. d, y"
+                              )}
+                           </p>
+                           <p className="mb-2">
+                              {toDisplayDate(
+                                 this.props.editableCard.card.nextAttemptAt,
+                                 "MMM. d, y"
+                              )}
+                           </p>
+                           <p className="mb-2">
+                              {
+                                 this.props.editableCard.card
+                                    .totalSuccessfulAttempts
+                              }
+                           </p>
+                        </div>
+                     </div>
+
+                     {/* <!-- Need to fix margins as well as checkbox color --> */}
+                     <div className="row">
+                        <div className="col">
+                           <form>
+                              <div className="custom-control custom-checkbox mb-2">
+                                 <input
+                                    type="checkbox"
+                                    className="custom-control-input"
+                                    id="customCheck"
+                                    name="example1"
+                                    onClick={() => {
+                                       this.showDeleteButton();
+                                    }}
+                                 />
+                                 <label
+                                    className="custom-control-label"
+                                    htmlFor="customCheck"
+                                 >
+                                    Show delete button
+                                 </label>
+                              </div>
+                           </form>
+                           {this.state.isDeleteButtonDisplayed && (
+                              <Link
+                                 to={this.changeRoute(
+                                    this.props.editableCard.prevRoute
+                                 )}
+                                 className="btn btn-outline-danger mb-2 "
+                                 id="deleteCard"
+                                 onClick={() => {
+                                    this.deleteCardFromStore();
+                                 }}
+                              >
+                                 Delete this Card
+                              </Link>
+                           )}
+                        </div>
+                     </div>
+                  </>
+               )}
             </AppTemplate>
          </div>
       );
    }
 }
+
+// everything here is global state
+function mapStateToProps(state) {
+   //state is from Redux store
+   return {
+      editableCard: state.editableCard,
+      queue: state.queue,
+   };
+}
+export default connect(mapStateToProps)(Edit);

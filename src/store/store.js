@@ -3,9 +3,12 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import combineReducers from "./combineReducers";
 
 const initialState = {
-   user: {},
-   queuedCards: [],
-   indexOfCurrentCard: 0,
+   currentUser: {},
+   queue: {
+      cards: [],
+      index: 0,
+   },
+   editableCard: {},
 };
 
 const store = createStore(combineReducers, initialState, composeWithDevTools());

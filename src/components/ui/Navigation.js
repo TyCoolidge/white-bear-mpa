@@ -21,7 +21,7 @@ export default function Navigation() {
       } else return "";
    };
    const tabActiveOnAllCards = (url) => {
-      if (url.indexOf("all-cards") > 0 || url.indexOf("edit") > 0) {
+      if (url.indexOf("all-cards") > 0) {
          return "tab-active"; //return bootstrap class of tab-active
       } else return "";
    };

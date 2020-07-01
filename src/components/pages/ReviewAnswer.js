@@ -6,13 +6,38 @@ import { connect } from "react-redux";
 import { actions } from "../../store/actions";
 
 class ReviewAnswer extends React.Component {
+   constructor(props) {
+      super(props);
+      if (this.props.queue.cards.length === 0) {
+         this.props.history.push("/review-empty");
+      }
+   }
    goToNextCard() {
       //TODO if index of current card =total length THEN show out of cards
-      this.props.dispatch({ type: actions.UPDATE_INDEX_OF_CURRENT_CARD });
-      this.props.history.push("/review-imagery");
+      if (this.props.queue.index === this.props.queue.cards.length - 1) {
+         //you're on the last card
+         this.props.dispatch({ type: actions.INCREMENT_QUEUE_INDEX });
+         this.props.history.push("/review-empty");
+      } else {
+         this.props.dispatch({ type: actions.INCREMENT_QUEUE_INDEX });
+         this.props.history.push("/review-imagery");
+      }
    }
+
+   storeEditableCard() {
+      console.log("store");
+      const memoryCard = this.props.queue.cards[this.props.queue.index];
+      this.props.dispatch({
+         type: actions.STORE_EDITABLE_CARD,
+         payload: {
+            card: memoryCard,
+            prevRoute: "/review-answer",
+         },
+      });
+   }
+
    render() {
-      const memoryCard = this.props.queuedCards[this.props.indexOfCurrentCard];
+      const memoryCard = this.props.queue.cards[this.props.queue.index];
       return (
          <AppTemplate>
             {/* <!--TOP CARD FOR FUTURE PAGES--> */}
@@ -36,6 +61,9 @@ class ReviewAnswer extends React.Component {
                type="button"
                className="btn btn-link"
                style={{ float: "left" }}
+               onClick={() => {
+                  this.storeEditableCard();
+               }}
             >
                Edit
             </Link>
@@ -73,8 +101,7 @@ class ReviewAnswer extends React.Component {
 
 function mapStateToProps(state) {
    return {
-      queuedCards: state.queuedCards,
-      indexOfCurrentCard: state.indexOfCurrentCard,
+      queue: state.queue,
    };
 }
 export default connect(mapStateToProps)(ReviewAnswer);

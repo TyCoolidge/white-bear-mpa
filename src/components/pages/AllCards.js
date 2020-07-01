@@ -1,17 +1,37 @@
 import React from "react";
 import AppTemplate from "../ui/AppTemplate";
 import MemoryCard from "../ui/MemoryCard";
-import memoryCards from "../../mock-data/memory-cards";
 import orderBy from "lodash/orderBy";
+import axios from "axios";
 
 export default class AllCards extends React.Component {
    constructor(props) {
       super(props);
+
       this.state = {
-         allCards: orderBy(memoryCards, "createdAt", "desc"),
-         displayedCards: orderBy(memoryCards, "createdAt", "desc"),
+         allCards: [],
+         displayedCards: [],
          orderBy: '["createdAt", "desc"]', //default value
       };
+   }
+
+   componentDidMount() {
+      //lifecycle method, do not have to call
+      axios //api call
+         .get("https://run.mocky.io/v3/461e65d9-b5c3-4eeb-a299-3f63bcb3accb")
+         .then((res) => {
+            // handle success
+            console.log(res.data);
+            const memoryCards = res.data;
+            this.setState({
+               allCards: orderBy(memoryCards, ["createdAt"], ["desc"]),
+               displayedCards: orderBy(memoryCards, ["createdAt"], ["desc"]),
+            });
+         })
+         .catch((error) => {
+            // handle error
+            console.log(error);
+         });
    }
 
    filteringCardsWithSearch() {
