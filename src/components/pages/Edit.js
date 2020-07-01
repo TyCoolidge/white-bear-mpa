@@ -48,6 +48,15 @@ class Edit extends React.Component {
    setAnswerText(e) {
       this.setState({ answerText: e.target.value });
    }
+
+   deleteCard() {
+      // delete from database
+      if (this.props.editableCard.prevRoute === "/review-answer") {
+         this.deleteCardFromStore();
+      }
+      if (this.props.editableCard.prevRoute === "/all-cards")
+         this.props.history.push("/all-cards");
+   }
    deleteCardFromStore() {
       const deleteCard = this.props.editableCard.card;
       const cards = this.props.queue.cards;
@@ -57,19 +66,10 @@ class Edit extends React.Component {
          type: actions.STORE_QUEUED_CARDS,
          payload: filteredCards,
       });
-      if (this.props.queue.index >= this.props.filteredCards.length) {
-         this.props.dispatch({
-            type: actions.DECREMENT_QUEUE_INDEX,
-         });
-      }
-   }
-
-   changeRoute(prevRoute) {
-      if (this.props.queue.index >= this.props.queue.length) {
-         return "/review-empty";
-      }
-      if (prevRoute === "/review-answer") {
-         return "/review-imagery";
+      if (filteredCards[this.props.queue.index] === undefined) {
+         this.props.history.push("/review-empty");
+      } else {
+         this.props.history.push("/review-imagery");
       }
    }
 
@@ -266,18 +266,15 @@ class Edit extends React.Component {
                               </div>
                            </form>
                            {this.state.isDeleteButtonDisplayed && (
-                              <Link
-                                 to={this.changeRoute(
-                                    this.props.editableCard.prevRoute
-                                 )}
+                              <button
                                  className="btn btn-outline-danger mb-2 "
                                  id="deleteCard"
                                  onClick={() => {
-                                    this.deleteCardFromStore();
+                                    this.deleteCard();
                                  }}
                               >
                                  Delete this Card
-                              </Link>
+                              </button>
                            )}
                         </div>
                      </div>

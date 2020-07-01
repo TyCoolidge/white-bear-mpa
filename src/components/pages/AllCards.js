@@ -107,13 +107,7 @@ export default class AllCards extends React.Component {
             <div className="clearfix"></div>
 
             {this.state.displayedCards.map((memoryCard) => {
-               return (
-                  <MemoryCard
-                     answer={memoryCard.answer}
-                     imagery={memoryCard.imagery}
-                     key={memoryCard.id}
-                  />
-               );
+               return <MemoryCard card={memoryCard} key={memoryCard.id} />;
             })}
             {/* key = allows react to iterate over data quickly */}
          </AppTemplate>

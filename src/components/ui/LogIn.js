@@ -4,6 +4,7 @@ import { withRouter, Link } from "react-router-dom";
 import hash from "object-hash";
 import { v4 as getUuid } from "uuid";
 import { EMAIL_REGEX } from "../../utils/helpers";
+import axios from "axios";
 
 class LogIn extends React.Component {
    constructor(props) {
@@ -17,6 +18,22 @@ class LogIn extends React.Component {
          emailText: "",
          passwordText: "",
       };
+   }
+
+   componentDidMount() {
+      //lifecycle method, do not have to call
+      axios //api call
+         .get("https://run.mocky.io/v3/461e65d9-b5c3-4eeb-a299-3f63bcb3accb")
+         .then((res) => {
+            // handle success
+            console.log(res.data);
+            const currentUSer = res.data;
+            console.log(currentUSer);
+         })
+         .catch((error) => {
+            // handle error
+            console.log(error);
+         });
    }
    async setLogInEmailState(logInEmailInput) {
       if (logInEmailInput === "")
