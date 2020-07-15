@@ -5,6 +5,9 @@ import hash from "object-hash";
 import { v4 as getUuid } from "uuid";
 import { withRouter } from "react-router-dom";
 import { EMAIL_REGEX } from "../../utils/helpers";
+import axios from "axios";
+import { actions } from "../../store/actions";
+import { connect } from "react-redux";
 
 class SignUp extends React.Component {
    constructor(props) {
@@ -94,13 +97,30 @@ class SignUp extends React.Component {
          this.state.hasEmailError === false &&
          this.state.hasPasswordError === false
       ) {
-         const user = {
+         const signUpNewUser = {
             id: getUuid(),
             email: emailInput,
             password: hash(passwordInput),
             createdAt: Date.now(),
          };
-         console.log(user);
+         console.log("Created user object:", signUpNewUser);
+         // Mimic API response
+         axios //api call
+            .get("https://run.mocky.io/v3/72bc0359-8717-447b-a4ab-16ec882ec2f6")
+            .then((res) => {
+               // handle success
+               const currentUser = res.data;
+               console.log(currentUser);
+               this.props.dispatch({
+                  type: actions.UPDATE_CURRENT_USER,
+                  payload: res.data,
+               });
+            })
+            .catch((error) => {
+               // handle error
+               console.log(error);
+            });
+         console.log(signUpNewUser);
          this.props.history.push("/create-answer");
       }
    }
@@ -209,4 +229,7 @@ class SignUp extends React.Component {
    }
 }
 
-export default withRouter(SignUp);
+function mapStateToProps(state) {
+   return {};
+}
+export default withRouter(connect(mapStateToProps)(SignUp));

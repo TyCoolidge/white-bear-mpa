@@ -5,6 +5,8 @@ import hash from "object-hash";
 import { v4 as getUuid } from "uuid";
 import { EMAIL_REGEX } from "../../utils/helpers";
 import axios from "axios";
+import { actions } from "../../store/actions";
+import { connect } from "react-redux";
 
 class LogIn extends React.Component {
    constructor(props) {
@@ -20,21 +22,6 @@ class LogIn extends React.Component {
       };
    }
 
-   componentDidMount() {
-      //lifecycle method, do not have to call
-      axios //api call
-         .get("https://run.mocky.io/v3/461e65d9-b5c3-4eeb-a299-3f63bcb3accb")
-         .then((res) => {
-            // handle success
-            console.log(res.data);
-            const currentUSer = res.data;
-            console.log(currentUSer);
-         })
-         .catch((error) => {
-            // handle error
-            console.log(error);
-         });
-   }
    async setLogInEmailState(logInEmailInput) {
       if (logInEmailInput === "")
          this.setState({
@@ -86,7 +73,24 @@ class LogIn extends React.Component {
             password: hash(logInPasswordInput),
             createdAt: Date.now(),
          };
-         console.log(logInUser);
+         console.log("Created user object:", logInUser);
+         // Mimic API response
+         axios //api call
+            .get("https://run.mocky.io/v3/72bc0359-8717-447b-a4ab-16ec882ec2f6")
+            .then((res) => {
+               // handle success
+               const currentUser = res.data;
+               console.log(currentUser);
+               this.props.dispatch({
+                  type: actions.UPDATE_CURRENT_USER,
+                  payload: res.data,
+               });
+            })
+            .catch((error) => {
+               // handle error
+               console.log(error);
+            });
+
          this.props.history.push("/create-answer");
       }
    }
@@ -164,4 +168,7 @@ class LogIn extends React.Component {
       );
    }
 }
-export default withRouter(LogIn);
+function mapStateToProps(state) {
+   return {};
+}
+export default withRouter(connect(mapStateToProps)(LogIn));
